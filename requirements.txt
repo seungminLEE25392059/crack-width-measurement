@@ -1,0 +1,12 @@
+# Python 3.10 or later. These are minimum versions; the exact versions used for
+# the final results are written to log/environment.txt by run_evaluation.py.
+numpy>=1.26
+scipy>=1.11
+scikit-image>=0.22
+scikit-learn>=1.4
+opencv-python-headless>=4.9
+matplotlib>=3.8
+pandas>=2.1
+joblib>=1.3
+# Method C also needs PyTorch. It is pre-installed on Colab; for a local
+# install see https://pytorch.org/get-started/locally/
