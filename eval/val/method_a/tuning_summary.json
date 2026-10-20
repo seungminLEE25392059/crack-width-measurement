@@ -1,0 +1,73 @@
+{
+  "objective": "mean per-image F1, validation split",
+  "n_images": 69,
+  "history": [
+    {
+      "stage": 1,
+      "name": "structure",
+      "settings": 72,
+      "seconds": 1920,
+      "chosen": {
+        "median_ksize": 7,
+        "enhance": "none",
+        "background": "blackhat",
+        "threshold": "otsu",
+        "min_elongation": 0.0
+      },
+      "mean_f1": 0.5701442278101496,
+      "micro_f1": 0.3555762201942727
+    },
+    {
+      "stage": 2,
+      "name": "enhancement",
+      "settings": 5,
+      "seconds": 141,
+      "chosen": {
+        "tophat_radius": 31
+      },
+      "mean_f1": 0.6456363988911598,
+      "micro_f1": 0.3960022513717539
+    },
+    {
+      "stage": 4,
+      "name": "cleanup",
+      "settings": 648,
+      "seconds": 244,
+      "chosen": {
+        "open_radius": 2,
+        "close_radius": 1,
+        "min_area": 50,
+        "elongation_rule": "ellipse",
+        "min_elongation": 3.0
+      },
+      "mean_f1": 0.6896318954849616,
+      "micro_f1": 0.5962439590382003
+    }
+  ],
+  "params": {
+    "median_ksize": 7,
+    "enhance": "none",
+    "clahe_clip": 2.0,
+    "clahe_grid": 8,
+    "background": "blackhat",
+    "tophat_radius": 31,
+    "threshold": "otsu",
+    "adaptive_block": 51,
+    "adaptive_c": 10,
+    "canny_scale": 1.0,
+    "canny_fill_radius": 3,
+    "open_radius": 2,
+    "close_radius": 1,
+    "min_area": 50,
+    "min_elongation": 3.0,
+    "elongation_rule": "ellipse"
+  },
+  "edge_check": {
+    "note": "tophat_radius 31 was the largest value in the stage-2 grid, so 41 and 51 were checked afterwards with the stage-4 settings fixed",
+    "mean_f1": {
+      "31": 0.6896,
+      "41": 0.6695,
+      "51": 0.6587
+    }
+  }
+}

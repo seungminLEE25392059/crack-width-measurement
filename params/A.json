@@ -1,0 +1,18 @@
+{
+  "median_ksize": 7,
+  "enhance": "none",
+  "clahe_clip": 2.0,
+  "clahe_grid": 8,
+  "background": "blackhat",
+  "tophat_radius": 31,
+  "threshold": "otsu",
+  "adaptive_block": 51,
+  "adaptive_c": 10,
+  "canny_scale": 1.0,
+  "canny_fill_radius": 3,
+  "open_radius": 2,
+  "close_radius": 1,
+  "min_area": 50,
+  "min_elongation": 3.0,
+  "elongation_rule": "ellipse"
+}

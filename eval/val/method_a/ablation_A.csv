@@ -1,0 +1,14 @@
+variant,mean_precision,mean_recall,mean_f1,micro_f1,delta_f1,empty_masks
+Full Method A (selected),0.8878,0.6028,0.6896,0.5962,0.0,0
+No median filter,0.6715,0.584,0.5661,0.5022,-0.1236,0
+No contrast enhancement,0.8878,0.6028,0.6896,0.5962,0.0,0
+No median filter and no enhancement,0.6715,0.584,0.5661,0.5022,-0.1236,0
+No opening or closing,0.8743,0.5928,0.6815,0.5889,-0.0081,0
+No component filter,0.7597,0.638,0.6282,0.3785,-0.0614,0
+No clean-up at all,0.7459,0.6432,0.6252,0.3683,-0.0645,0
+No black top-hat (inverted image),0.1883,0.1308,0.1221,0.1548,-0.5675,0
+Enhancement: histeq,0.0966,0.2373,0.1244,0.1416,-0.5653,0
+Enhancement: clahe,0.2219,0.6579,0.3038,0.289,-0.3858,0
+Threshold: adaptive,0.7779,0.574,0.6482,0.6264,-0.0415,0
+Threshold: canny,0.4769,0.6527,0.537,0.5835,-0.1526,0
+Thinness rule instead of ellipse (score 8),0.8598,0.6145,0.6563,0.4611,-0.0334,0
