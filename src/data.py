@@ -29,7 +29,6 @@ def _index(folder: str) -> dict[str, Path]:
     return {p.stem: p for p in sorted(root.iterdir()) if p.suffix.lower() in config.IMAGE_EXTS}
 
 
-@placeholder
 def list_ids() -> list[str]:
     """Sorted IDs (file stems) that have both an image and a mask.
 
@@ -40,7 +39,6 @@ def list_ids() -> list[str]:
     return sorted(set(images) & set(masks))
 
 
-@placeholder
 def load_pair(image_id: str) -> tuple[np.ndarray, np.ndarray]:
     """Load one photograph and its reference mask.
 
@@ -56,7 +54,6 @@ def load_pair(image_id: str) -> tuple[np.ndarray, np.ndarray]:
     return image, mask
 
 
-@placeholder
 def check_dataset() -> dict:
     """Check the dataset before the split and return a summary for Section 2.2.
 
@@ -67,7 +64,6 @@ def check_dataset() -> dict:
     return {"pairs": len(list_ids())}
 
 
-@placeholder
 def make_split(ids: list[str], ratios: tuple[float, float, float] = config.SPLIT_RATIOS,
                seed: int = config.SEED) -> dict[str, list[str]]:
     """Split image IDs into train / val / test at the photograph level.
@@ -116,7 +112,6 @@ def _origins(length: int, tile: int, stride: int) -> list[int]:
     return starts
 
 
-@placeholder
 def make_tiles(array: np.ndarray, tile: int = config.TILE_SIZE,
                overlap: int = config.TILE_OVERLAP) -> tuple[np.ndarray, list[tuple[int, int]], np.ndarray]:
     """Cut an (H, W) or (H, W, C) array into overlapping tile x tile patches.
@@ -141,7 +136,6 @@ def make_tiles(array: np.ndarray, tile: int = config.TILE_SIZE,
     return tiles, origins, valid
 
 
-@placeholder
 def stitch_tiles(tile_maps: np.ndarray, origins: list[tuple[int, int]],
                  shape: tuple[int, int]) -> np.ndarray:
     """Average overlapping (N, tile, tile) maps back into one (H, W) float32 map."""
@@ -157,7 +151,6 @@ def stitch_tiles(tile_maps: np.ndarray, origins: list[tuple[int, int]],
     return (summed / np.maximum(count, 1))[:height, :width].astype(np.float32)
 
 
-@placeholder
 def dataset_stats(ids: list[str]) -> dict:
     """Dataset summary for Section 2.2 of the report.
 
