@@ -71,10 +71,12 @@ def make_split(ids: list[str], ratios: tuple[float, float, float] = config.SPLIT
     Each original photograph goes to exactly one subset before any tiling, so
     tiles cut from one photograph never appear in two subsets.
     """
+    import random
+
     ordered = sorted(ids)
-    rng = np.random.default_rng(seed)
-    shuffled = [ordered[i] for i in rng.permutation(len(ordered))]
-    n_train = round(ratios[0] * len(ordered))
+    shuffled = ordered.copy()
+    random.Random(seed).shuffle(shuffled)
+    n_train = int(ratios[0] * len(ordered))
     n_val = round(ratios[1] * len(ordered))
     return {
         "train": sorted(shuffled[:n_train]),
