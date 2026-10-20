@@ -8,6 +8,7 @@ Author : Seungmin Lee
 """
 from __future__ import annotations
 
+import importlib.util
 import sys
 from pathlib import Path
 
@@ -94,6 +95,8 @@ def check_method_b():
 
 
 def check_method_c():
+    if importlib.util.find_spec("torch") is None:
+        return None, "skipped: PyTorch not installed here (only needed to run Method C)"
     net = method_c.load_unet(config.MODELS_DIR / "unet.pt")
     if net is None and not utils.is_placeholder(method_c.segment_c):
         return None, "skipped: no models/unet.pt yet"
@@ -129,8 +132,21 @@ def check_metrics():
     return ok, f"same mask F1 1.00; 1-px shift F1 {shifted['f1']:.2f}, tolerance F1 {shifted['tol_f1']:.2f}"
 
 
+def check_pr():
+    score = np.where(REF, 0.9, 0.1)          # a perfect score map: every crack pixel above every background pixel
+    curve = evaluate.pr_curve(*evaluate.score_histograms(score, REF))
+    ap, best = evaluate.average_precision(curve), float(curve["f1"].max())
+    return abs(ap - 1) < 1e-9 and abs(best - 1) < 1e-9, f"perfect score map: AP {ap:.2f}, best F1 {best:.2f}"
+
+
+def check_grade():
+    grades = [evaluate.grade(width, (3.0, 6.0)) for width in (float("nan"), 2.0, 9.0)]
+    ok = grades[0] == evaluate.UNMEASURED and set(grades[1:]) <= set(config.SEVERITY_LABELS)
+    return ok, f"NaN width -> '{grades[0]}', 2 px -> {grades[1]}, 9 px -> {grades[2]}"
+
+
 def check_matching():
-    _, labels = measure.measure_cracks(REF)
+    _, labels, _ = evaluate.measure_mask(REF)
     matches = evaluate.match_cracks(labels, labels)
     return all(ref_id == pred_id for ref_id, pred_id in matches.items()), f"{len(matches)} crack matched to itself"
 
@@ -146,6 +162,8 @@ CHECKS = [
     ("Junsen", (measure.measure_cracks,), check_measure),
     ("Junsen", (measure.severity_thresholds, measure.severity_grade), check_severity),
     ("Seungmin", (evaluate.seg_metrics,), check_metrics),
+    ("Seungmin", (evaluate.pr_curve, evaluate.average_precision), check_pr),
+    ("Seungmin", (evaluate.grade,), check_grade),
     ("Seungmin", (evaluate.match_cracks,), check_matching),
 ]
 OWNED_MODULES = (data, method_a, method_b, method_c, method_d, measure)

@@ -1,0 +1,8 @@
+{
+  "low": 20.0,
+  "high": 56.32051136131489,
+  "cracks": 787,
+  "min_crack_area_px": 20,
+  "measure_placeholder": false,
+  "source": "training reference max widths, measure.severity_thresholds"
+}
