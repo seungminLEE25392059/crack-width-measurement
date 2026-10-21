@@ -1,0 +1,10 @@
+python 3.11.9
+platform Windows-10-10.0.26200-SP0
+numpy 2.4.6
+scipy 1.17.1
+scikit-image 0.26.0
+scikit-learn 1.9.1
+opencv-python-headless 5.0.0.93
+matplotlib 3.11.2
+pandas 3.0.6
+joblib 1.6.0
