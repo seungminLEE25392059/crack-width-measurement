@@ -59,8 +59,11 @@ def compare_masks(ref_cracks, ref_labels, prediction, scale):
     """Measure at native small resolution; upsample labels ONLY for matching."""
     prediction = np.asarray(prediction)
     if prediction.ndim != 2 or prediction.dtype != np.bool_:
-        raise ValueError("prediction must be a 2D boolean mask")
+                raise ValueError("prediction must be a 2D boolean mask")
     pred_cracks, pred_labels = measure.measure_cracks(prediction)
+    # Same crack definition as run_evaluation.py: drop components under 20 full-resolution pixels.
+    pred_cracks, pred_labels = evaluate.keep_cracks(pred_cracks, pred_labels,
+                                                    evaluate.MIN_CRACK_AREA_PX * scale ** 2)
     converted = [{key: crack[key] for key in measure.CRACK_KEYS} for crack in pred_cracks]
     for crack in converted:
         for key in ("mean_width_px", "max_width_px", "length_px"):
@@ -259,7 +262,7 @@ def main():
         image_rows, crack_rows = [], []
         for index, image_id in enumerate(ids, 1):
             image, reference = data.load_pair(image_id)
-            ref_cracks, ref_labels = measure.measure_cracks(reference)
+            ref_cracks, ref_labels, _ = evaluate.measure_mask(reference)
             h, w = reference.shape
             for scale in SCALES:
                 small = image if scale == 1.0 else scaled_image(image, scale)
