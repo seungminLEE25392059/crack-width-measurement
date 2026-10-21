@@ -1,0 +1,9 @@
+criterion,method,value,rule,met
+1 Segmentation,C,"recall 0.838, F1 0.870 (best F1)",recall > 0.79 (top of the edge-detector range),yes
+2 Measurement,C,"max-width MAE 19.04 px, bias -16.13 px",MAE <= 4 px and bias >= -1.0 px,no
+3 Severity,A,"severe cracks: 2 graded minor, 1 missed",0 severe cracks graded minor,no
+3 Severity,B,"severe cracks: 0 graded minor, 0 missed",0 severe cracks graded minor,yes
+3 Severity,C,"severe cracks: 0 graded minor, 0 missed",0 severe cracks graded minor,yes
+3 Severity,D,"severe cracks: 0 graded minor, 0 missed",0 severe cracks graded minor,yes
+4 Resolution,-,see scripts/run_resolution.py,a minimum measurable width can be stated,-
+5 Comparison,all,"F1 ranks A=4, B=3, C=1, D=2; width ranks A=4, B=3, C=1, D=2",written up in Results and Discussion,same ranking

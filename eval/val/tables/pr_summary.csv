@@ -1,0 +1,3 @@
+method,average_precision,best_f1,best_threshold,operating_threshold,operating_precision,operating_recall,operating_f1
+B,0.6898,0.6855,0.9059,0.9000,0.6853,0.6856,0.6854
+C,0.9028,0.8725,0.9843,0.9900,0.9049,0.8384,0.8704
