@@ -59,7 +59,7 @@ def compare_masks(ref_cracks, ref_labels, prediction, scale):
     """Measure at native small resolution; upsample labels ONLY for matching."""
     prediction = np.asarray(prediction)
     if prediction.ndim != 2 or prediction.dtype != np.bool_:
-                raise ValueError("prediction must be a 2D boolean mask")
+        raise ValueError("prediction must be a 2D boolean mask")
     pred_cracks, pred_labels = measure.measure_cracks(prediction)
     # Same crack definition as run_evaluation.py: drop components under 20 full-resolution pixels.
     pred_cracks, pred_labels = evaluate.keep_cracks(pred_cracks, pred_labels,
