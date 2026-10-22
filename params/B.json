@@ -4,5 +4,6 @@
   "svm_C": 1.0,
   "svm_gamma": "scale",
   "threshold": 0.9,
+  "min_component_area": 2560,
   "patches_per_class": 2000
 }

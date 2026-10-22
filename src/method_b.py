@@ -3,7 +3,8 @@
 Pipeline (Task 1 report, Method B): sample balanced crack / non-crack patches
 from training images -> HOG + GLCM feature vector per patch -> standardise ->
 RBF SVM (C and gamma chosen on validation data) -> slide a window over each
-image and average overlapping patch scores into a confidence map -> threshold.
+image and average overlapping patch scores into a confidence map -> threshold
+-> remove 8-connected components smaller than the configured minimum area.
 
 Inputs : RGB uint8 image (H, W, 3), fitted model, parameter dict
 Outputs: bool crack mask (H, W) and float32 confidence map (H, W) in [0, 1]
@@ -29,6 +30,7 @@ DEFAULT_PARAMS = {
     "svm_C": 1.0,
     "svm_gamma": "scale",
     "threshold": 0.5,          # confidence threshold, chosen on validation data
+    "min_component_area": 2560,  # pixels; keep components of exactly this size
     "patches_per_class": 2000,
 }
 
@@ -147,8 +149,30 @@ def load_model_b(path: Path):
     return joblib.load(path) if path.exists() else None
 
 
+def postprocess_mask_b(mask: np.ndarray, min_area: int = 2560) -> np.ndarray:
+    """Remove 8-connected crack components smaller than min_area; 0 disables it."""
+    if mask.ndim != 2 or mask.dtype != bool or min_area < 0:
+        raise ValueError("Expected a 2-D bool mask and min_area >= 0")
+    if min_area <= 1:
+        return mask.copy()
+    _, labels, stats, _ = cv2.connectedComponentsWithStats(
+        mask.astype(np.uint8), connectivity=8
+    )
+    keep = stats[:, cv2.CC_STAT_AREA] >= min_area
+    keep[0] = False
+    return keep[labels]
+
+
+def mask_from_confidence_b(confidence: np.ndarray, params: dict) -> np.ndarray:
+    """Apply the same threshold and area filtering in inference and validation."""
+    return postprocess_mask_b(
+        confidence >= params["threshold"],
+        int(params.get("min_component_area", DEFAULT_PARAMS["min_component_area"])),
+    )
+
+
 def segment_b(image: np.ndarray, model, params: dict) -> tuple[np.ndarray, np.ndarray]:
-    """Average overlapping patch probabilities into a pixel-sized confidence map."""
+    """Return the area-filtered mask and unchanged overlapping-window confidence."""
     if model is None:
         raise ValueError("Method B requires a fitted model")
     patch_size = int(params["patch"])
@@ -182,4 +206,4 @@ def segment_b(image: np.ndarray, model, params: dict) -> tuple[np.ndarray, np.nd
         summed[row:row + patch_size, col:col + patch_size] += probability
         coverage[row:row + patch_size, col:col + patch_size] += 1
     confidence = np.clip(summed / np.maximum(coverage, 1), 0.0, 1.0)[:height, :width].astype(np.float32)
-    return confidence >= params["threshold"], confidence
+    return mask_from_confidence_b(confidence, params), confidence
