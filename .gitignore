@@ -4,3 +4,4 @@ __pycache__/
 *.py[cod]
 models/
 results/
+data/Concrete Crack B2 32x32 Center 2x2/_feature_cache*/
